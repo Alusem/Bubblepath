@@ -1,16 +1,26 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class GameController : MonoBehaviour
 {
-    public GameObject inimigoPrefab; // Prefab do inimigo
+    public GameObject[] inimigosPrefabs; // Array com os 4 tipos de inimigos
     public Transform playerCena; // Referência do player
     public GameObject bossPrefab; // Prefab do boss final
     public Transform[] pontosDeSpawn; // Posições onde os inimigos irão aparecer
     public float tempoEntreOndas = 5f; // Tempo entre cada onda de inimigos
-    public int inimigosPorOnda = 5; // Número de inimigos por onda
+    public int inimigosPorOnda = 5; // Número inicial de inimigos por onda
+    public int incrementoPorOnda = 2; // Quantidade de inimigos a serem adicionados a cada nova onda
     public float tempoParaBoss = 60f; // Tempo em segundos para o boss aparecer (1 minuto)
     public Transform pontoDeSpawnBoss; // Ponto específico para o boss aparecer (se necessário)
+    public TMP_Text textoMoeda; // Texto que exibe a vida na UI (opcional)
+    public TMP_Text textoPowerUp; // Texto que exibe a vida na UI (opcional)
+
+
+    public VidaPersonagem lifeController;
+
+    public int coins;
+    public int powerUpMultiplier = 1;
 
     private bool bossApareceu = false; // Flag para verificar se o boss já apareceu
 
@@ -18,9 +28,22 @@ public class GameController : MonoBehaviour
     {
         // Inicia a geração das ondas de inimigos
         StartCoroutine(GerarOndasInimigos());
-        
+
+        powerUpMultiplier = PlayerPrefs.GetInt("PowerUp");
+
         // Inicia a contagem para o aparecimento do boss
         StartCoroutine(AguardarAparicaoDoBoss());
+    }
+
+    void Update(){
+        if (textoMoeda != null)
+        {
+            textoMoeda.text = $"Moeda: {coins}";
+        }
+        if (textoPowerUp != null)
+        {
+            textoPowerUp.text = $"Power Up: {powerUpMultiplier}";
+        }
     }
 
     // Função para gerar as ondas de inimigos
@@ -30,14 +53,14 @@ public class GameController : MonoBehaviour
         {
             if (pontosDeSpawn.Length > 0) // Verifique se o array de pontos de spawn não está vazio
             {
-                // Gera inimigos em cada ponto de spawn
+                // Gera inimigos na quantidade definida para aquela onda
                 for (int i = 0; i < inimigosPorOnda; i++)
                 {
                     // Seleciona um ponto aleatório de spawn
                     Transform pontoDeSpawn = pontosDeSpawn[Random.Range(0, pontosDeSpawn.Length)];
-                    
-                    // Instancia o inimigo no ponto de spawn escolhido
-                    GameObject inimigo = Instantiate(inimigoPrefab, pontoDeSpawn.position, pontoDeSpawn.rotation);
+
+                    // Aqui, selecionamos aleatoriamente um inimigo para aquele ponto de spawn
+                    GameObject inimigo = Instantiate(inimigosPrefabs[Random.Range(0, inimigosPrefabs.Length)], pontoDeSpawn.position, pontoDeSpawn.rotation);
 
                     // Configura o inimigo para seguir o player
                     MovimentoInimigo movimentoInimigo = inimigo.GetComponent<MovimentoInimigo>();
@@ -46,6 +69,9 @@ public class GameController : MonoBehaviour
                         movimentoInimigo.personagem = playerCena; // Define o jogador como alvo do inimigo
                     }
                 }
+
+                // Incrementa a quantidade de inimigos para a próxima onda
+                inimigosPorOnda += incrementoPorOnda;
             }
             else
             {
@@ -83,6 +109,20 @@ public class GameController : MonoBehaviour
 
             // Exibe mensagem no console para informar que o boss apareceu
             Debug.Log("O Boss Final Apareceu!");
+        }
+    }
+
+    public void AddCoins(int coinsToAdd){
+        coins += coinsToAdd;
+    }
+
+    public void BuyPowerUp(){
+        if(coins >= 5){
+            powerUpMultiplier += 2;
+            int currentPowerUp = PlayerPrefs.GetInt("PowerUp");
+            currentPowerUp++;
+            PlayerPrefs.SetInt("PowerUp", currentPowerUp);
+            lifeController.ResetarGame();
         }
     }
 }

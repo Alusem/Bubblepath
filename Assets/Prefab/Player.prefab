@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6409704496886414351}
   - component: {fileID: 6869059054325495374}
   - component: {fileID: 3893588575272341343}
+  - component: {fileID: 8079519100163248301}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -31,8 +32,8 @@ Transform:
   m_GameObject: {fileID: 8528110516947036277}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.43, y: -2.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.2375, y: -2.5642, z: 0}
+  m_LocalScale: {x: 3.1388, y: 3.1388, z: 3.1388}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -81,8 +82,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: -9095717837082945937, guid: cd3f5a51eabeed74ea80799c658f2693, type: 3}
-  m_Color: {r: 0, g: 1, b: 0.015367031, a: 1}
+  m_Sprite: {fileID: 2684625181974131877, guid: b29e6fada0522594e8e676b4034b23f4, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -122,6 +123,7 @@ MonoBehaviour:
   pontoDeDisparo: {fileID: 1006858674163171683}
   velocidadeDoProjetil: 10
   intervaloDeDisparo: 0.1
+  somDeDisparo: {fileID: 8300000, guid: 2956e2c0d68d14f48b3c78f4c14308cd, type: 3}
 --- !u!114 &6409704496886414351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,6 +139,8 @@ MonoBehaviour:
   vida: 100
   barraDeVida: {fileID: 0}
   textoVida: {fileID: 0}
+  somDeDano: {fileID: 8300000, guid: 3dcd24f447772f64794b6f8961fb020e, type: 3}
+  sceneController: {fileID: 0}
 --- !u!70 &6869059054325495374
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -171,8 +175,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
+  m_Offset: {x: -0.0057095885, y: 0.14672983}
+  m_Size: {x: 0.18162096, y: 0.29055429}
   m_Direction: 0
 --- !u!50 &3893588575272341343
 Rigidbody2D:
@@ -201,3 +205,25 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!95 &8079519100163248301
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8528110516947036277}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9dd53879ea49b804d8a1214dd0349399, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

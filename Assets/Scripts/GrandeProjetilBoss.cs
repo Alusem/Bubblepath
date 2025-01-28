@@ -11,7 +11,7 @@ public class GrandeProjetilBoss : MonoBehaviour
         Destroy(gameObject, tempoDeVida);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         // Verifica se o projétil grande colidiu com o jogador
         if (other.CompareTag("Player"))
