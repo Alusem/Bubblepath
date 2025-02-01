@@ -112,17 +112,43 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void AddCoins(int coinsToAdd){
+    public void AddCoins(int coinsToAdd)
+    {
         coins += coinsToAdd;
+        PlayerPrefs.SetInt("Moedas", coins); // Salva o valor atual das moedas
     }
 
-    public void BuyPowerUp(){
-        if(coins >= 5){
-            powerUpMultiplier += 2;
+    public void BuyPowerUp()
+    {
+        int custoPowerUp = 10; // Define o custo fixo de cada power-up
+
+        // Verifica quantos power-ups o jogador pode comprar
+        int quantidadeComprada = coins / custoPowerUp;
+
+        if (quantidadeComprada > 0)
+        {
+            // Deduz o número de moedas proporcional aos power-ups comprados
+            coins -= quantidadeComprada * custoPowerUp;
+
+            // Incrementa o multiplicador de power-ups proporcionalmente
+            powerUpMultiplier += quantidadeComprada;
+
+            // Salva o novo multiplicador nos PlayerPrefs
             int currentPowerUp = PlayerPrefs.GetInt("PowerUp");
-            currentPowerUp++;
+            currentPowerUp += quantidadeComprada;
             PlayerPrefs.SetInt("PowerUp", currentPowerUp);
-            lifeController.ResetarGame();
+
+            // Atualiza a UI (opcional, se estiver configurada)
+            if (textoPowerUp != null)
+            {
+                textoPowerUp.text = $"Power Up: {powerUpMultiplier}";
+            }
+
+            Debug.Log($"Comprado {quantidadeComprada} Power-Up(s). Novo multiplicador: {powerUpMultiplier}. Moedas restantes: {coins}");
+        }
+        else
+        {
+            Debug.Log("Moedas insuficientes para comprar um Power-Up!");
         }
     }
 }

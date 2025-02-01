@@ -4,8 +4,8 @@ using TMPro;
 
 public class VidaPersonagem : MonoBehaviour
 {
-    public int vida = 100 ; // Vida inicial do personagem
-    public int numMortes = 0; // Vezes que o personagem ja morreu
+    public int vida = 100; // Vida inicial do personagem
+    public int numMortes = 0; // Vezes que o personagem já morreu
     public Slider barraDeVida; // Barra de vida na UI (opcional)
     public TMP_Text textoVida; // Texto que exibe a vida na UI (opcional)
     public AudioClip somDeDano; // Som ao perder vida
@@ -14,12 +14,12 @@ public class VidaPersonagem : MonoBehaviour
     public SceneController sceneController; // Referência ao SceneController
     private AudioManager audioManager; // Referência ao AudioManager
 
-    public GameObject OptionsPanel;
+    public GameObject OptionsPanel; // Painel de opções exibido ao morrer
 
     private void Start()
     {
+        numMortes = PlayerPrefs.GetInt("Mortes", 0);
 
-        numMortes = PlayerPrefs.GetInt("Mortes");
         // Inicializa a UI, se necessário
         if (barraDeVida != null)
         {
@@ -49,7 +49,7 @@ public class VidaPersonagem : MonoBehaviour
 
     public void PerderVida(int dano)
     {
-        Debug.Log("Perdendo vida: " + dano); // Verifica se o dano é passado corretamente
+        Debug.Log("Perdendo vida: " + dano);
         vida -= dano;
 
         // Toca o som de dano, se disponível
@@ -79,26 +79,68 @@ public class VidaPersonagem : MonoBehaviour
 
     private void VidaMorta()
     {
-        // Aqui você pode implementar o que acontece quando o personagem morre
         Debug.Log("Personagem morreu!");
+
+        gameObject.SetActive(false);
 
         numMortes++;
         PlayerPrefs.SetInt("Mortes", numMortes);
-        // Chama a função do SceneController para reiniciar o jogo
-        OptionsPanel.SetActive(true);
-        
+
+        // Exibe o painel de opções
+        if (OptionsPanel != null)
+        {
+            OptionsPanel.SetActive(true);
+        }
     }
 
-    public void ResetarGame(){
+    public void ResetarGame()
+    {
         if (sceneController != null)
         {
+            // Reativa o objeto do jogador e redefine seus atributos
+            gameObject.SetActive(true);
+            vida = 100;
+
+            if (barraDeVida != null)
+            {
+                barraDeVida.value = vida;
+            }
+
+            if (textoVida != null)
+            {
+                textoVida.text = "Vida: " + vida;
+            }
+
+            // Reinicia o jogo
             sceneController.ReiniciarJogo();
         }
     }
 
-    private void Update(){
-        if(Input.GetKeyDown("r")){
+    public void ResetarProgresso()
+    {
+        PlayerPrefs.DeleteAll(); // Remove todos os dados salvos
+
+        if (gameController != null)
+        {
+            gameController.coins = 0;
+            gameController.powerUpMultiplier = 1;
+
+            // Atualiza a UI
+            if (gameController.textoMoeda != null)
+            {
+                gameController.textoMoeda.text = $"Moeda: {gameController.coins}";
+            }
+        }
+
+        Debug.Log("Progresso resetado.");
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown("r"))
+        {
             PlayerPrefs.DeleteAll();
+            Debug.Log("PlayerPrefs resetados.");
         }
     }
 }
